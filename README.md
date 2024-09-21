@@ -7,7 +7,8 @@ IoT platform used to send data from the traffic lights to the server using MQTT.
    - String MQTT_CLIENT_ID = "spring-boot-client"
 Test Mosquitto on windows as follows:
    - cd "C:\Program Files\Mosquitto"
-   - mosquitto_sub - localhost -t myTopic -u admin -P 12345678
+   - start mosquitto: net start mosquitto
+   - mosquitto_sub -h localhost -t myTopic -u admin -P 12345678
    - mosquitto_pub -h localhost -t myTopic -m "Hello, from MQTT publisher!" -u admin -P 12345678
    
 

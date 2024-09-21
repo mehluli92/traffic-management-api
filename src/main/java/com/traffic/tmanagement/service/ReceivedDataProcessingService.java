@@ -1,4 +1,4 @@
-package com.traffic.tmanagement.service.receivedData;
+package com.traffic.tmanagement.service;
 
 import org.springframework.stereotype.Service;
 
