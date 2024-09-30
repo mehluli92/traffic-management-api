@@ -1,5 +1,7 @@
 package com.traffic.tmanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,9 +25,8 @@ public class ViolationType {
     private Double fine_amount;
 
     //sort this relationship out
-    @OneToMany(mappedBy = "violationType", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "violationType", fetch = FetchType.LAZY)
     private List<TrafficViolations> trafficViolations;
-    //private Long violation_type_id;
     @CreationTimestamp
     private LocalDateTime created_at;
     @UpdateTimestamp

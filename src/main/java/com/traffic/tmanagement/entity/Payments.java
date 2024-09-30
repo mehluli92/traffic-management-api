@@ -23,7 +23,7 @@ public class Payments {
     //define a one to one relationship between Payments and traffic violation
     @OneToOne
     @JoinColumn(name = "traffic_violation_id", referencedColumnName = "id", nullable = false)
-    private TrafficViolations trafficViolation;
+    private TrafficViolations trafficViolations;
 
     @CreationTimestamp
     private LocalDateTime created_at;

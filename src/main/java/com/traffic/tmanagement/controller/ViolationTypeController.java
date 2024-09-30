@@ -1,8 +1,11 @@
 package com.traffic.tmanagement.controller;
 
+import com.traffic.tmanagement.dto.ViolationTypeDTO;
 import com.traffic.tmanagement.entity.ViolationType;
 import com.traffic.tmanagement.service.violation.ViolationTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,26 +21,30 @@ public class ViolationTypeController {
     public ViolationTypeController(ViolationTypeService violationTypeService) {
         this.violationTypeService = violationTypeService;
     }
-
+    @PostMapping
+    public ResponseEntity<ViolationTypeDTO> createViolationType(@RequestBody ViolationTypeDTO newViolationType) {
+        ViolationTypeDTO violationType = violationTypeService.createViolationType(newViolationType);
+        return ResponseEntity.ok(violationType);
+    }
     @GetMapping("/get-all")
-    public ResponseEntity<List<ViolationType>> getAllViolationTypes() {
-        List<ViolationType> violationTypes = violationTypeService.getAllViolationTypes();
+    public ResponseEntity<Page<ViolationTypeDTO>> getAllViolationTypes(Pageable pageable) {
+        Page<ViolationTypeDTO> violationTypes = violationTypeService.getAllViolationTypes(pageable);
         return ResponseEntity.ok(violationTypes);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ViolationType> getViolationTypeById(@PathVariable Long id) {
-        Optional<ViolationType> violationType = violationTypeService.getViolationTypeById(id);
+    public ResponseEntity<ViolationTypeDTO> getViolationTypeById(@PathVariable Long id) {
+        Optional<ViolationTypeDTO> violationType = violationTypeService.getViolationTypeById(id);
         return violationType.map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<ViolationType> updateViolationType(@PathVariable Long id, @RequestBody ViolationType violationType){
-        ViolationType updatedViolationType = violationTypeService.updateViolationType(id, violationType);
+    @PutMapping("/{id}")
+    public ResponseEntity<ViolationTypeDTO> updateViolationType(@PathVariable Long id, @RequestBody ViolationTypeDTO violationType){
+        ViolationTypeDTO updatedViolationType = violationTypeService.updateViolationType(id, violationType);
         return updatedViolationType != null ? ResponseEntity.ok(updatedViolationType): ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteViolationType(@PathVariable Long id) {
         violationTypeService.deleteViolationType(id);
         return ResponseEntity.noContent().build();

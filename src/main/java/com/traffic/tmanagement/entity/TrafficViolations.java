@@ -30,7 +30,7 @@ public class TrafficViolations {
     @JoinColumn(name = "violation_type_id", nullable = true)
     private ViolationType violationType;
 
-    @OneToOne(mappedBy = "trafficViolation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "trafficViolations", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private Payments payment;
     @CreationTimestamp
     private LocalDateTime created_at;

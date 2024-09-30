@@ -1,8 +1,13 @@
 package com.traffic.tmanagement.controller;
 
+import com.traffic.tmanagement.dto.PaymentsDTO;
 import com.traffic.tmanagement.entity.Payments;
 import com.traffic.tmanagement.service.payment.PaymentsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,22 +23,26 @@ public class PaymentsController {
         this.paymentsService = paymentsService;
     }
 
+    @GetMapping
+    public Page<PaymentsDTO> getAllPayments(Pageable pageable){
+        return paymentsService.getAllPayments(pageable);
+    }
     @PostMapping
-    public ResponseEntity<Payments> createPayment(@RequestBody Payments payments) {
-        return ResponseEntity.ok(paymentsService.createPayment(payments));
+    public ResponseEntity<PaymentsDTO> createPayment(@RequestBody PaymentsDTO paymentsDTO) {
+        return ResponseEntity.ok(paymentsService.createPayment(paymentsDTO));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Payments> getPaymentById(@PathVariable Long id) {
-        Optional<Payments> payment = paymentsService.getPaymentsById(id);
+    public ResponseEntity<PaymentsDTO> getPaymentById(@PathVariable Long id) {
+        Optional<PaymentsDTO> payment = paymentsService.getPaymentsById(id);
         return payment.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Payments> updatePayment(@PathVariable Long id, @RequestBody Payments paymentDetails) {
+    public ResponseEntity<PaymentsDTO> updatePayment(@PathVariable Long id, @RequestBody PaymentsDTO paymentsDTO) {
         try {
-            Payments updatedPayment = paymentsService.updatePayments(id, paymentDetails);
+            PaymentsDTO updatedPayment = paymentsService.updatePayments(id, paymentsDTO);
             return ResponseEntity.ok(updatedPayment);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();

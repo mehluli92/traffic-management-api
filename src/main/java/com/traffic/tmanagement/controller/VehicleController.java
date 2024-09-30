@@ -1,7 +1,10 @@
 package com.traffic.tmanagement.controller;
 
+import com.traffic.tmanagement.dto.vehicle.VehicleDTO;
 import com.traffic.tmanagement.entity.Vehicle;
 import com.traffic.tmanagement.service.vehicle.VehicleService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,32 +16,31 @@ import java.util.Optional;
 public class VehicleController {
     private final VehicleService vehicleService;
 
-
     public VehicleController(VehicleService vehicleService) {
         this.vehicleService = vehicleService;
     }
 
     @PostMapping
-    public ResponseEntity<Vehicle> createVehicle (@RequestBody Vehicle vehicle) {
-        Vehicle createVehicle = vehicleService.createVehicle(vehicle);
+    public ResponseEntity<VehicleDTO> createVehicle (@RequestBody VehicleDTO vehicleDTO) {
+        VehicleDTO createVehicle = vehicleService.createVehicle(vehicleDTO);
         return ResponseEntity.ok(createVehicle);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Vehicle> getVehicleById(@PathVariable Long id) {
-        Optional<Vehicle> vehicle = vehicleService.getVehicleById(id);
+    public ResponseEntity<VehicleDTO> getVehicleById(@PathVariable Long id) {
+        Optional<VehicleDTO> vehicle = vehicleService.getVehicleById(id);
         return vehicle.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public ResponseEntity<List<Vehicle>> getAllVehicles() {
-        List<Vehicle> vehicles = vehicleService.getAllVehicles();
+    public ResponseEntity<Page<VehicleDTO>> getAllVehicles(Pageable pageable) {
+        Page<VehicleDTO> vehicles = vehicleService.getAllVehicles(pageable);
         return ResponseEntity.ok(vehicles);
     }
 
-    @PutMapping("/id")
-    public ResponseEntity<Vehicle> updateVehicle(@PathVariable Long id, @RequestBody Vehicle vehicle) {
-        Vehicle updatedVehicle = vehicleService.updateVehicle(id,vehicle);
+    @PutMapping("/{id}")
+    public ResponseEntity<VehicleDTO> updateVehicle(@PathVariable Long id, @RequestBody VehicleDTO vehicleDTO) {
+        VehicleDTO updatedVehicle = vehicleService.updateVehicle(id,vehicleDTO);
         return ResponseEntity.ok(updatedVehicle);
     }
 

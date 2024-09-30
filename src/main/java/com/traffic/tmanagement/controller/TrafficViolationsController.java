@@ -1,13 +1,14 @@
 package com.traffic.tmanagement.controller;
 
-import com.traffic.tmanagement.entity.TrafficViolations;
+import com.traffic.tmanagement.dto.TrafficViolationsDTO;
 import com.traffic.tmanagement.service.violation.TrafficViolationsService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/violations")
@@ -19,21 +20,28 @@ public class TrafficViolationsController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<TrafficViolations>> getTrafficViolations(){
-        List<TrafficViolations> trafficViolations = trafficViolationsService.getAllTrafficViolations();
+    public ResponseEntity<Page<TrafficViolationsDTO>> getTrafficViolations(Pageable pageable) {
+        Page<TrafficViolationsDTO> trafficViolations = trafficViolationsService.getAllTrafficViolations(pageable);
         return ResponseEntity.ok(trafficViolations);
     }
 
+    @PostMapping
+    public ResponseEntity<TrafficViolationsDTO> createTrafficViolation(@RequestBody TrafficViolationsDTO trafficViolationsDTO) {
+        TrafficViolationsDTO trafficViolation = trafficViolationsService.createTrafficViolation(trafficViolationsDTO);
+        return ResponseEntity.ok(trafficViolation);
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<TrafficViolations> getTrafficViolationById(@PathVariable Long id) {
-        Optional<TrafficViolations> trafficViolation = trafficViolationsService.getTrafficViolation(id);
-        return trafficViolation.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<TrafficViolationsDTO> getTrafficViolationById(@PathVariable Long id) {
+        return trafficViolationsService.getTrafficViolation(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<TrafficViolations> updateTrafficViolations(@PathVariable Long id, @RequestBody TrafficViolations trafficViolations) {
-        TrafficViolations updatedTrafficViolation = trafficViolationsService.updateTrafficViolation(id, trafficViolations);
-        return updatedTrafficViolation != null ? ResponseEntity.ok(updatedTrafficViolation): ResponseEntity.notFound().build();
+    public ResponseEntity<TrafficViolationsDTO> updateTrafficViolations(@PathVariable Long id, @RequestBody TrafficViolationsDTO trafficViolationsDTO) {
+        TrafficViolationsDTO updatedTrafficViolation = trafficViolationsService.updateTrafficViolation(id, trafficViolationsDTO);
+        return updatedTrafficViolation != null ? ResponseEntity.ok(updatedTrafficViolation) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
